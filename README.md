@@ -1,4 +1,4 @@
-# intaglio
+# Artichoke `clang-format` Runner
 
 [![GitHub Actions](https://github.com/artichoke/clang-format/workflows/CI/badge.svg)](https://github.com/artichoke/clang-format/actions)
 [![Discord](https://img.shields.io/discord/607683947496734760)](https://discord.gg/QCe2tp2)
