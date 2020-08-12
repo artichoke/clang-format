@@ -21,7 +21,6 @@ program.parse(process.argv);
 (async function main() {
   const timer = setInterval(() => {}, 100);
   try {
-
     const files = await walk(formatDir);
     const lintState = await clangFormatter(files, program.check);
     const failures = lintState

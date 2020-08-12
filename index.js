@@ -105,4 +105,4 @@ module.exports = {
   STATUS,
   clangFormatter,
   walk,
-}
+};

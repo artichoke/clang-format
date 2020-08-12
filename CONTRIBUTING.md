@@ -7,16 +7,18 @@ Artichoke aspires to be a Ruby 2.6.3-compatible implementation of the Ruby
 programming language.
 [There is lots to do](https://github.com/artichoke/artichoke/issues).
 
-The Artichoke `clang-format` runner is used to lint C sources in development and CI.
+The Artichoke `clang-format` runner is used to lint C sources in development and
+CI.
 
 If Artichoke does not run Ruby source code in the same way that MRI does, it is
 a bug and we would appreciate if you
 [filed an issue so we can fix it](https://github.com/artichoke/artichoke/issues/new).
 [File bugs specific to the Artichoke `clang-format` runner in this repository](https://github.com/artichoke/clang-format/issues/new).
 
-If you would like to contribute code to the Artichoke `clang-format` runner 👩‍💻👨‍💻, find an issue that looks
-interesting and leave a comment that you're beginning to investigate. If there
-is no issue, please file one before beginning to work on a PR.
+If you would like to contribute code to the Artichoke `clang-format` runner
+👩‍💻👨‍💻, find an issue that looks interesting and leave a comment that you're
+beginning to investigate. If there is no issue, please file one before beginning
+to work on a PR.
 [Good first issues are labeled `E-easy`](https://github.com/artichoke/clang-format/labels/E-easy).
 
 ## Discussion
@@ -26,8 +28,8 @@ If you'd like to engage in a discussion outside of GitHub, you can
 
 ## Setup
 
-The Artichoke `clang-format` runner includes JavaScript and Text sources. Developing on the runner requires
-configuring several dependencies.
+The Artichoke `clang-format` runner includes JavaScript and Text sources.
+Developing on the runner requires configuring several dependencies.
 
 ### Node.js
 

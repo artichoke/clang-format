@@ -30,6 +30,7 @@ npx github:artichoke/clang-format path/to/repo
 The Artichoke `clang-format` runner is licensed under the [MIT License](LICENSE)
 (c) Ryan Lopopolo.
 
-[Sarcasm/run-clang-format]: https://github.com/Sarcasm/run-clang-format
-[`npx`]: https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner
+[sarcasm/run-clang-format]: https://github.com/Sarcasm/run-clang-format
+[`npx`]:
+  https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner
 [artichoke/artichoke]: https://github.com/artichoke/artichoke

@@ -28,7 +28,6 @@ jobs:
           ref: 98c9f2921d4220a793b6b8cbe87252505b2f2385
           path: artichoke-integration-test
 
-
       - name: Install Nodejs toolchain
         run: npm ci
 
