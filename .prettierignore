@@ -1,0 +1,17 @@
+**/*
+
+!**/*/
+
+.vscode/
+node_modules/
+target/
+
+!*.html
+!*.js
+!*.json
+!*.md
+!*.yaml
+!*.yml
+
+**/vendor/*
+!**/vendor/*.md
