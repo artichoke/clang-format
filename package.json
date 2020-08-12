@@ -1,0 +1,47 @@
+{
+  "name": "@artichoke/clang-format",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Artichoke Ruby clang-format runner",
+  "keywords": [
+    "clang-format",
+    "linter",
+    "formatter",
+    "C"
+  ],
+  "homepage": "https://github.com/artichoke/clang-format#readme",
+  "bugs": "https://github.com/artichoke/clang-format/issues",
+  "license": "MIT",
+  "author": "Ryan Lopopolo <rjl@hyperbo.la> (https://hyperbo.la/)",
+  "contributors": [
+    "Ryan Lopopolo <rjl@hyperbo.la> (https://hyperbo.la/)"
+  ],
+  "repository": "github:artichoke/clang-format",
+  "main": "./index",
+  "bin": {
+    "clang-format": "./cli.js"
+  },
+  "files": [
+    "index.js",
+    "cli.js"
+  ],
+  "dependencies": {
+    "array-flat-polyfill": "^1.0.1",
+    "clang-format": "^1.2.4",
+    "commander": "^6.0.0"
+  },
+  "devDependencies": {},
+  "eslintConfig": {
+    "env": {
+      "node": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 8
+    }
+  },
+  "scripts": {
+    "fmt": "npx prettier --write '**/*'",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix"
+  }
+}
