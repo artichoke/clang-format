@@ -37,6 +37,10 @@ jobs:
       - name: Run locally with npx
         run: npx -p . clang-format --check artichoke-integration-test
 
+      - name: Run locally with npx and inferred target directory
+        run: npx -p . clang-format --check
+        working-directory: "artichoke-integration-test"
+
   js:
     name: Lint and format JS
     runs-on: ubuntu-latest
