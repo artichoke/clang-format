@@ -57,11 +57,11 @@ const cFiles = (files) => [
   ...filesWithExtension(files, "h"),
 ];
 
-async function clangFormatter(files, checkMode) {
+async function clangFormatter(files, checkMode, sourceRoot) {
   const sources = cFiles(files);
   return Promise.all(
     sources.map((source) => {
-      const relative = path.relative(path.resolve(__dirname, ".."), source);
+      const relative = path.relative(sourceRoot, source);
       return new Promise((resolve, reject) => {
         let formatted = "";
         const done = async (err) => {

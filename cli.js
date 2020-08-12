@@ -24,7 +24,7 @@ program.parse(process.argv);
   const timer = setInterval(() => {}, 100);
   try {
     const files = await walk(formatDir);
-    const lintState = await clangFormatter(files, program.check);
+    const lintState = await clangFormatter(files, program.check, formatDir);
     const failures = lintState
       .flat(Infinity)
       .filter((status) => status === STATUS.failed);
