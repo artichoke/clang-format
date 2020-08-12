@@ -12,7 +12,9 @@ program
   .version("0.1.0")
   .arguments("[directory]")
   .action((directory) => {
-    formatDir = directory;
+    if (directory !== undefined) {
+      formatDir = directory;
+    }
   })
   .option("--check", "Run in 'check' mode.");
 
