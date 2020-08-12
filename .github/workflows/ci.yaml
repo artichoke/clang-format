@@ -1,0 +1,59 @@
+name: CI
+on:
+  push:
+    branches:
+      - trunk
+  pull_request:
+    branches:
+      - trunk
+  schedule:
+    - cron: "0 0 * * TUE"
+jobs:
+  test:
+    name: Integration test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: artichoke/artichoke
+          # This ref is guaranteed to have C source files
+          ref: 98c9f2921d4220a793b6b8cbe87252505b2f2385
+          path: artichoke-integration-test
+
+
+      - name: Install Nodejs toolchain
+        run: npm ci
+
+      - name: Run locally
+        run: node ./cli.js --check artichoke-integration-test
+
+      - name: Run locally with npx
+        run: npx -p . clang-format --check artichoke-integration-test
+
+  js:
+    name: Lint and format JS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Lint and check formatting with eslint
+        run: npx eslint .
+
+  text:
+    name: Lint and format text
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Lint and check formatting with prettier
+        run: npx prettier --check '**/*'
