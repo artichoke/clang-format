@@ -21,8 +21,24 @@ registry.
 
 ## Usage
 
+Format sources with:
+
 ```shell
 npx github:artichoke/clang-format path/to/repo
+```
+
+or the current directory with:
+
+```shell
+npx github:artichoke/clang-format
+```
+
+This runner supports a `--check` argument which does not format sources and
+instead exits with an error on bad formatting. This flag is appropriate for
+running `clang-format` in CI.
+
+```shell
+npx github:artichoke/clang-format --check
 ```
 
 ## License
