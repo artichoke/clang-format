@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -10,6 +8,19 @@ const STATUS = Object.freeze({
   ok: "ok",
   failed: "failed",
 });
+
+const ok = (path) =>
+  Object.freeze({
+    path,
+    status: STATUS.ok,
+  });
+
+const ko = (path, err = null) =>
+  Object.freeze({
+    path,
+    status: STATUS.failed,
+    err,
+  });
 
 const IGNORE_DIRECTORIES = Object.freeze([
   ".git",
@@ -31,18 +42,18 @@ async function walk(dir) {
             return walk(filepath);
           }
           if (stats.isFile()) {
-            return Promise.resolve(filepath);
+            return Promise.resolve(ok(filepath));
           }
-          return Promise.reject(filepath);
+          return Promise.reject(ko(filepath));
         } catch (err) {
-          return Promise.reject(err);
+          return Promise.reject(ko(file, err));
         }
       });
     return Promise.all(children).then((dirEntries) =>
       dirEntries.flat(Infinity).filter((entry) => entry != null)
     );
   } catch (err) {
-    return Promise.reject(err);
+    return Promise.reject(ko(null, err));
   }
 }
 
@@ -62,43 +73,42 @@ async function clangFormatter(files, checkMode, sourceRoot) {
   return Promise.all(
     sources.map((source) => {
       const relative = path.relative(sourceRoot, source);
-      return new Promise((resolve, reject) => {
-        let formatted = "";
-        const done = async (err) => {
-          if (err) {
-            console.error(`KO: ${relative}`);
-            reject(err);
-          } else {
-            try {
-              const contents = await fs.readFile(source);
-              if (formatted.toString() === contents.toString()) {
-                console.info(`OK: ${relative}`);
-                resolve(STATUS.ok);
-              } else if (checkMode) {
-                console.error(`KO: ${relative}`);
-                resolve(STATUS.failed);
-              } else {
-                await fs.writeFile(source, formatted.toString());
-                console.info(`OK: ${relative}`);
-                resolve(STATUS.ok);
-              }
-            } catch (error) {
-              console.error(`KO: ${relative}`);
-              reject(error);
-            }
-          }
-        };
-        const formatter = spawnClangFormat([source], done, [
-          "ignore",
-          "pipe",
-          process.stderr,
-        ]);
-        formatter.stdout.on("data", (data) => {
-          formatted += data.toString();
-        });
-      });
+      return formatSource(source, relative, checkMode);
     })
   );
+}
+
+async function formatSource(source, relative, checkMode) {
+  return new Promise((resolve, reject) => {
+    let formatted = "";
+    const done = async (err) => {
+      if (err) {
+        reject(ko(relative, err));
+      } else {
+        try {
+          const contents = await fs.readFile(source);
+          if (formatted.toString() === contents.toString()) {
+            resolve(ok(relative));
+          } else if (checkMode) {
+            resolve(ko(relative));
+          } else {
+            await fs.writeFile(source, formatted.toString());
+            resolve(ok(relative));
+          }
+        } catch (error) {
+          reject(ko(relative, error));
+        }
+      }
+    };
+    const formatter = spawnClangFormat([source], done, [
+      "ignore",
+      "pipe",
+      process.stderr,
+    ]);
+    formatter.stdout.on("data", (data) => {
+      formatted += data.toString();
+    });
+  });
 }
 
 module.exports = {
