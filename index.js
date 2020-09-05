@@ -8,6 +8,8 @@ const { ok, ko } = require("./result");
 
 const IGNORE_DIRECTORIES = Object.freeze([
   ".git",
+  "build",
+  "emsdk",
   "node_modules",
   "target",
   "vendor",
