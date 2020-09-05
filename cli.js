@@ -5,6 +5,7 @@ const path = require("path");
 const { program } = require("commander");
 const { clangFormatter, walk } = require("./index");
 const { STATUS } = require("./result");
+const { version } = require("./package.json");
 
 async function run(directory, cmd) {
   const dir = directory || path.resolve(".");
@@ -48,7 +49,7 @@ async function run(directory, cmd) {
   const timer = setInterval(() => {}, 100);
   try {
     program
-      .version("0.2.0")
+      .version(version)
       .description(
         `Node.js runner for LLVM clang-format
 
