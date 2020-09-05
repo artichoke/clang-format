@@ -5,7 +5,6 @@ const path = require("path");
 const { program } = require("commander");
 const { clangFormatter, walk } = require("./index");
 const { STATUS } = require("./result");
-require("array-flat-polyfill");
 
 async function run(directory, cmd) {
   const dir = directory || path.resolve(".");

@@ -1,8 +1,6 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-require("array-flat-polyfill");
-
 const clangFormatSpawn = require("./clang-format-spawn");
 const { ok, ko } = require("./result");
 
@@ -18,26 +16,26 @@ const IGNORE_DIRECTORIES = Object.freeze([
 async function walk(dir) {
   try {
     const files = await fs.readdir(dir);
-    const children = files
-      .filter((file) => !IGNORE_DIRECTORIES.includes(file))
-      .map(async (file) => {
-        try {
-          const filepath = path.join(dir, file);
-          const stats = await fs.stat(filepath);
-          if (stats.isDirectory()) {
-            return walk(filepath);
-          }
-          if (stats.isFile()) {
-            return Promise.resolve(ok(filepath));
-          }
-          return Promise.reject(ko(filepath));
-        } catch (err) {
-          return Promise.reject(ko(file, err));
-        }
-      });
-    return Promise.all(children).then((dirEntries) =>
-      dirEntries.flat(Infinity).filter((entry) => entry != null)
+    const permissible = files.filter(
+      (file) => !IGNORE_DIRECTORIES.includes(file)
     );
+    const children = permissible.map(async (file) => {
+      try {
+        const filepath = path.join(dir, file);
+        const stats = await fs.stat(filepath);
+        if (stats.isDirectory()) {
+          return walk(filepath);
+        }
+        if (stats.isFile()) {
+          return Promise.resolve(ok(filepath));
+        }
+        return Promise.reject(ko(filepath));
+      } catch (err) {
+        return Promise.reject(ko(file, err));
+      }
+    });
+    const listing = Promise.all(children);
+    return listing.then((entries) => entries.flat(Infinity));
   } catch (err) {
     return Promise.reject(ko(null, err));
   }
