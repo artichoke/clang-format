@@ -21,12 +21,6 @@
   "bin": {
     "clang-format": "./cli.js"
   },
-  "files": [
-    "clang-format-spawn.js",
-    "cli.js",
-    "index.js",
-    "result.js"
-  ],
   "dependencies": {
     "array-flat-polyfill": "^1.0.1",
     "commander": "^6.1.0"
