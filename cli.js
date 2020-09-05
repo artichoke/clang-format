@@ -3,7 +3,8 @@
 
 const path = require("path");
 const { program } = require("commander");
-const { STATUS, clangFormatter, walk } = require("./index");
+const { clangFormatter, walk } = require("./index");
+const { STATUS } = require("./result");
 require("array-flat-polyfill");
 
 async function run(directory, cmd) {
@@ -48,7 +49,7 @@ async function run(directory, cmd) {
   const timer = setInterval(() => {}, 100);
   try {
     program
-      .version("0.1.0")
+      .version("0.2.0")
       .description(
         `Node.js runner for LLVM clang-format
 

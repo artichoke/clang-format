@@ -2,25 +2,9 @@ const fs = require("fs").promises;
 const path = require("path");
 
 require("array-flat-polyfill");
-const { spawnClangFormat } = require("clang-format");
 
-const STATUS = Object.freeze({
-  ok: "ok",
-  failed: "failed",
-});
-
-const ok = (path) =>
-  Object.freeze({
-    path,
-    status: STATUS.ok,
-  });
-
-const ko = (path, err = null) =>
-  Object.freeze({
-    path,
-    status: STATUS.failed,
-    err,
-  });
+const clangFormatSpawn = require("./clang-format-spawn");
+const { ok, ko } = require("./result");
 
 const IGNORE_DIRECTORIES = Object.freeze([
   ".git",
@@ -79,40 +63,42 @@ async function clangFormatter(files, checkMode, sourceRoot) {
 }
 
 async function formatSource(source, relative, checkMode) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let formatted = "";
     const done = async (err) => {
       if (err) {
-        reject(ko(relative, err));
-      } else {
-        try {
-          const contents = await fs.readFile(source);
-          if (formatted.toString() === contents.toString()) {
-            resolve(ok(relative));
-          } else if (checkMode) {
-            resolve(ko(relative));
-          } else {
-            await fs.writeFile(source, formatted.toString());
-            resolve(ok(relative));
-          }
-        } catch (error) {
-          reject(ko(relative, error));
+        return reject(ko(relative, err));
+      }
+      try {
+        const contents = await fs.readFile(source);
+        if (formatted.toString() === contents.toString()) {
+          resolve(ok(relative));
+        } else if (checkMode) {
+          resolve(ko(relative));
+        } else {
+          await fs.writeFile(source, formatted.toString());
+          resolve(ok(relative));
         }
+      } catch (error) {
+        reject(ko(relative, error));
       }
     };
-    const formatter = spawnClangFormat([source], done, [
-      "ignore",
-      "pipe",
-      process.stderr,
-    ]);
-    formatter.stdout.on("data", (data) => {
-      formatted += data.toString();
-    });
+    try {
+      const formatter = await clangFormatSpawn(source, done, [
+        "ignore",
+        "pipe",
+        process.stderr,
+      ]);
+      formatter.stdout.on("data", (data) => {
+        formatted += data.toString();
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
 }
 
 module.exports = {
-  STATUS,
   clangFormatter,
   walk,
 };
