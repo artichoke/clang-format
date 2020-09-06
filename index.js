@@ -1,7 +1,7 @@
 const fs = require("fs").promises;
 const path = require("path");
 
-const clangFormatSpawn = require("./clang-format-spawn");
+const format = require("./format");
 const { ok, ko } = require("./result");
 
 const IGNORE_DIRECTORIES = Object.freeze([
@@ -63,39 +63,23 @@ async function clangFormatter(files, checkMode, sourceRoot) {
 }
 
 async function formatSource(source, relative, checkMode) {
-  return new Promise(async (resolve, reject) => {
-    let formatted = "";
-    const done = async (err) => {
-      if (err) {
-        return reject(ko(relative, err));
-      }
-      try {
-        const contents = await fs.readFile(source);
-        if (formatted.toString() === contents.toString()) {
-          resolve(ok(relative));
-        } else if (checkMode) {
-          resolve(ko(relative));
-        } else {
-          await fs.writeFile(source, formatted.toString());
-          resolve(ok(relative));
-        }
-      } catch (error) {
-        reject(ko(relative, error));
-      }
-    };
-    try {
-      const formatter = await clangFormatSpawn(source, done, [
-        "ignore",
-        "pipe",
-        process.stderr,
-      ]);
-      formatter.stdout.on("data", (data) => {
-        formatted += data.toString();
-      });
-    } catch (err) {
-      reject(err);
+  try {
+    const contents = await fs.readFile(source);
+    const formatted = await format(source);
+    if (formatted.toString() === contents.toString()) {
+      return Promise.resolve(ok(relative));
     }
-  });
+    // Contents did not match
+    if (checkMode) {
+      // check mode, so fail.
+      return Promise.resolve(ko(relative));
+    }
+    // write formatted contents to disk
+    await fs.writeFile(source, formatted.toString());
+    return Promise.resolve(ok(relative));
+  } catch (err) {
+    return Promise.reject(ko(relative, err));
+  }
 }
 
 module.exports = {
