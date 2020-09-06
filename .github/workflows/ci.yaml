@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       - name: Run locally
-        run: node ./cli.js --check artichoke-integration-test
+        run: node ./bin/clang-format.js --check artichoke-integration-test
 
       - name: Run locally with npx
         run: npx -p . clang-format --check artichoke-integration-test
