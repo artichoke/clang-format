@@ -56,8 +56,8 @@ module.exports = {
           return checkSource(source, relative);
         });
         return Promise.all(promises);
-      }
-    }
+      },
+    };
   },
   format(sourceRoot) {
     return {
@@ -70,7 +70,7 @@ module.exports = {
           return formatSource(source, relative);
         });
         return Promise.all(promises);
-      }
-    }
+      },
+    };
   },
 };
