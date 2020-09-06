@@ -1,6 +1,6 @@
 {
   "name": "@artichoke/clang-format",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Artichoke Ruby clang-format runner",
   "keywords": [
@@ -17,10 +17,8 @@
     "Ryan Lopopolo <rjl@hyperbo.la> (https://hyperbo.la/)"
   ],
   "repository": "github:artichoke/clang-format",
-  "main": "./index",
-  "bin": {
-    "clang-format": "./cli.js"
-  },
+  "main": "./index.js",
+  "bin": "./bin/clang-format.js",
   "dependencies": {
     "commander": "^6.1.0"
   },
