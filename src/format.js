@@ -1,17 +1,26 @@
+"use strict";
+
 const spawn = require("child_process").spawn;
 const fs = require("fs").promises;
 const os = require("os");
 const path = require("path");
 
-const { ko } = require("./result");
+const { STATUS, ok, ko } = require("./result");
 
-async function format(source) {
+const binpath = async () => {
   let executable;
   if (os.platform() === "win32") {
-    executable = path.resolve(__dirname, "bin", "win32", "clang-format.exe");
+    executable = path.resolve(
+      __dirname,
+      "..",
+      "bin",
+      "win32",
+      "clang-format.exe"
+    );
   } else {
     executable = path.resolve(
       __dirname,
+      "..",
       "bin",
       os.platform(),
       os.arch(),
@@ -24,6 +33,19 @@ async function format(source) {
     if (err) {
       return Promise.reject(ko(executable, err));
     }
+    return Promise.resolve(ok(executable));
+  } catch (err) {
+    return Promise.reject(ko(executable, err));
+  }
+};
+
+const format = async (source) => {
+  try {
+    const result = await binpath();
+    if (result.status === STATUS.failed) {
+      return Promise.reject(result);
+    }
+    const executable = result.path;
     let formatted = "";
 
     const stdio = ["ignore", "pipe", process.stderr];
@@ -44,6 +66,6 @@ async function format(source) {
   } catch (err) {
     return Promise.reject(ko(null, err));
   }
-}
+};
 
 module.exports = format;
