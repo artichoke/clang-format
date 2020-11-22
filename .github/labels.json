@@ -25,6 +25,11 @@
     "description": "Area: Invoking with npx, packaging, etc."
   },
   {
+    "name": "A-embedded-bin",
+    "color": "f7e101",
+    "description": "Area: Embedded `clang-format` binaries."
+  },
+  {
     "name": "A-performance",
     "color": "f7e101",
     "description": "Area: Performance improvements and optimizations."
