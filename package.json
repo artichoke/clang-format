@@ -1,6 +1,6 @@
 {
   "name": "@artichoke/clang-format",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Artichoke Ruby clang-format runner",
   "keywords": [
@@ -18,7 +18,9 @@
   ],
   "repository": "github:artichoke/clang-format",
   "main": "./index.js",
-  "bin": "./bin/clang-format.js",
+  "bin": {
+    "clang-format": "bin/clang-format.js"
+  },
   "dependencies": {
     "commander": "^6.2.0"
   },
