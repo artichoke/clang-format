@@ -22,7 +22,7 @@
     "clang-format": "bin/clang-format.js"
   },
   "dependencies": {
-    "commander": "^6.2.0"
+    "commander": "^6.2.1"
   },
   "devDependencies": {},
   "eslintConfig": {
