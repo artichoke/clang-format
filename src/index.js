@@ -20,7 +20,7 @@ const formatSource = async (source, relative) => {
     return Promise.resolve(ok(relative));
   } catch (err) {
     if (err.err) {
-      err = err.err;
+      return Promise.reject(ko(relative, err.err));
     }
     return Promise.reject(ko(relative, err));
   }
@@ -38,7 +38,7 @@ const checkSource = async (source, relative) => {
     return Promise.resolve(ko(relative));
   } catch (err) {
     if (err.err) {
-      err = err.err;
+      return Promise.reject(ko(relative, err.err));
     }
     return Promise.reject(ko(relative, err));
   }
