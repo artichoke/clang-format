@@ -35,6 +35,14 @@
     ],
     "parserOptions": {
       "ecmaVersion": 8
+    },
+    "rules": {
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ]
     }
   },
   "scripts": {
