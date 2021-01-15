@@ -9,7 +9,7 @@ const { walk } = require("./fs");
 const { STATUS, ko } = require("./result");
 const { version } = require("../package.json");
 
-const run = async (directory, cmd) => {
+const run = async (directory, options, _command) => {
   try {
     const dir = directory || path.resolve(".");
     let files = await walk(dir);
@@ -29,7 +29,7 @@ const run = async (directory, cmd) => {
       process.exit(1);
     }
     let results;
-    if (cmd.check) {
+    if (options.check) {
       results = await formatter.check(dir).run(files);
     } else {
       results = await formatter.format(dir).run(files);

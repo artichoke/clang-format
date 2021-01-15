@@ -22,7 +22,7 @@
     "clang-format": "bin/clang-format.js"
   },
   "dependencies": {
-    "commander": "^6.2.1"
+    "commander": "^7.0.0"
   },
   "devDependencies": {},
   "eslintConfig": {
@@ -35,6 +35,14 @@
     ],
     "parserOptions": {
       "ecmaVersion": 8
+    },
+    "rules": {
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ]
     }
   },
   "scripts": {
