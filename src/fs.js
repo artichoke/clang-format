@@ -53,7 +53,9 @@ const formattableSourcesFrom = (files) => [
   ...filesWithExtension(files, ".h"),
 ];
 
-module.exports = {
-  formattableSourcesFrom,
-  walk,
-};
+module.exports = Object.freeze(
+  Object.assign(Object.create(null), {
+    formattableSourcesFrom,
+    walk,
+  })
+);
