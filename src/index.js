@@ -45,10 +45,10 @@ const checkSource = async (source, relative) => {
 };
 
 module.exports = Object.freeze(
-  Object.create(null, {
+  Object.assign(Object.create(null), {
     check(sourceRoot) {
       return Object.freeze(
-        Object.create(null, {
+        Object.assign(Object.create(null), {
           sourceRoot,
 
           async run(sources) {
@@ -64,7 +64,7 @@ module.exports = Object.freeze(
     },
     format(sourceRoot) {
       return Object.freeze(
-        Object.create(null, {
+        Object.assign(Object.create(null), {
           sourceRoot,
 
           async run(sources) {

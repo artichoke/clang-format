@@ -1,7 +1,7 @@
 "use strict";
 
 const STATUS = Object.freeze(
-  Object.create(null, {
+  Object.assign(Object.create(null), {
     ok: "ok",
     failed: "failed",
   })
@@ -9,7 +9,7 @@ const STATUS = Object.freeze(
 
 const ok = (path) =>
   Object.freeze(
-    Object.create(null, {
+    Object.assign(Object.create(null), {
       path,
       status: STATUS.ok,
     })
@@ -17,7 +17,7 @@ const ok = (path) =>
 
 const ko = (path, err = null) =>
   Object.freeze(
-    Object.create(null, {
+    Object.assign(Object.create(null), {
       path,
       status: STATUS.failed,
       err,
@@ -25,7 +25,7 @@ const ko = (path, err = null) =>
   );
 
 module.exports = Object.freeze(
-  Object.create(null, {
+  Object.assign(Object.create(null), {
     STATUS,
     ok,
     ko,

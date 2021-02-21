@@ -54,7 +54,7 @@ const formattableSourcesFrom = (files) => [
 ];
 
 module.exports = Object.freeze(
-  Object.create(null, {
+  Object.assign(Object.create(null), {
     formattableSourcesFrom,
     walk,
   })
