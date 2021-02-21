@@ -44,33 +44,39 @@ const checkSource = async (source, relative) => {
   }
 };
 
-module.exports = {
-  check(sourceRoot) {
-    return {
-      sourceRoot,
+module.exports = Object.freeze(
+  Object.create(null, {
+    check(sourceRoot) {
+      return Object.freeze(
+        Object.create(null, {
+          sourceRoot,
 
-      async run(sources) {
-        const formattableSources = formattableSourcesFrom(sources);
-        const promises = formattableSources.map((source) => {
-          const relative = path.relative(this.sourceRoot, source);
-          return checkSource(source, relative);
-        });
-        return Promise.all(promises);
-      },
-    };
-  },
-  format(sourceRoot) {
-    return {
-      sourceRoot,
+          async run(sources) {
+            const formattableSources = formattableSourcesFrom(sources);
+            const promises = formattableSources.map((source) => {
+              const relative = path.relative(this.sourceRoot, source);
+              return checkSource(source, relative);
+            });
+            return Promise.all(promises);
+          },
+        })
+      );
+    },
+    format(sourceRoot) {
+      return Object.freeze(
+        Object.create(null, {
+          sourceRoot,
 
-      async run(sources) {
-        const formattableSources = formattableSourcesFrom(sources);
-        const promises = formattableSources.map((source) => {
-          const relative = path.relative(this.sourceRoot, source);
-          return formatSource(source, relative);
-        });
-        return Promise.all(promises);
-      },
-    };
-  },
-};
+          async run(sources) {
+            const formattableSources = formattableSourcesFrom(sources);
+            const promises = formattableSources.map((source) => {
+              const relative = path.relative(this.sourceRoot, source);
+              return formatSource(source, relative);
+            });
+            return Promise.all(promises);
+          },
+        })
+      );
+    },
+  })
+);
