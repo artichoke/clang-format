@@ -46,7 +46,7 @@
     }
   },
   "scripts": {
-    "fmt": "npx prettier --write '**/*'",
+    "fmt": "npx prettier --write \"**/*\"",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint . --fix"
   }
