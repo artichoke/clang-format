@@ -74,7 +74,8 @@ enforced style.`
       )
       .option(
         "--check",
-        "Run in 'check' mode. Exit with a non-zero status if errors."
+        `Run in 'check' mode. Exit with a non-zero status code if any
+formatting errors are found.`
       )
       .arguments("[directory]")
       .action(run);
