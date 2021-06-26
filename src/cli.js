@@ -35,10 +35,10 @@ const run = async (directory, options, _command) => {
       results = await formatter.format(dir).run(files);
     }
     let failed = false;
-    results.forEach((result) => {
+    for (const result of results) {
       if (result.status === STATUS.ok) {
         console.log(`OK: ${result.path}`);
-        return;
+        continue;
       }
       if (result.path) {
         console.warn(`KO: ${result.path}`);
@@ -47,7 +47,7 @@ const run = async (directory, options, _command) => {
         console.error(result.err);
       }
       failed = true;
-    });
+    }
     if (failed) {
       process.exit(1);
     }
