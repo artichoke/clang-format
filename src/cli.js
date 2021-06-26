@@ -14,7 +14,7 @@ const run = async (directory, options, _command) => {
     const dir = directory || path.resolve(".");
     let files = await walk(dir);
     files = files.map((result) => {
-      if (result.status == STATUS.ok) {
+      if (result.status === STATUS.ok) {
         return result.path;
       }
       if (result.path) {
@@ -36,7 +36,7 @@ const run = async (directory, options, _command) => {
     }
     let failed = false;
     results.forEach((result) => {
-      if (result.status == STATUS.ok) {
+      if (result.status === STATUS.ok) {
         console.log(`OK: ${result.path}`);
         return;
       }
