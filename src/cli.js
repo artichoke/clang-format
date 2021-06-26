@@ -57,7 +57,6 @@ const run = async (directory, options, _command) => {
 };
 
 const main = async () => {
-  const timer = setInterval(() => {}, 100);
   try {
     program
       .version(version)
@@ -84,8 +83,6 @@ enforced style.`
     console.error("Error: Unhandled exception");
     console.error(err);
     process.exit(1);
-  } finally {
-    timer.unref();
   }
 };
 
