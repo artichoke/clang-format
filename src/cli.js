@@ -14,7 +14,7 @@ const run = async (directory, options, _command) => {
     const dir = directory || path.resolve(".");
     let files = await walk(dir);
     files = files.map((result) => {
-      if (result.status == STATUS.ok) {
+      if (result.status === STATUS.ok) {
         return result.path;
       }
       if (result.path) {
@@ -35,10 +35,10 @@ const run = async (directory, options, _command) => {
       results = await formatter.format(dir).run(files);
     }
     let failed = false;
-    results.forEach((result) => {
-      if (result.status == STATUS.ok) {
+    for (const result of results) {
+      if (result.status === STATUS.ok) {
         console.log(`OK: ${result.path}`);
-        return;
+        continue;
       }
       if (result.path) {
         console.warn(`KO: ${result.path}`);
@@ -47,7 +47,7 @@ const run = async (directory, options, _command) => {
         console.error(result.err);
       }
       failed = true;
-    });
+    }
     if (failed) {
       process.exit(1);
     }
@@ -57,7 +57,6 @@ const run = async (directory, options, _command) => {
 };
 
 const main = async () => {
-  const timer = setInterval(() => {}, 100);
   try {
     program
       .version(version)
@@ -75,7 +74,8 @@ enforced style.`
       )
       .option(
         "--check",
-        "Run in 'check' mode. Exit with a non-zero status if errors."
+        `Run in 'check' mode. Exit with a non-zero status code if any
+formatting errors are found.`
       )
       .arguments("[directory]")
       .action(run);
@@ -84,8 +84,6 @@ enforced style.`
     console.error("Error: Unhandled exception");
     console.error(err);
     process.exit(1);
-  } finally {
-    timer.unref();
   }
 };
 
