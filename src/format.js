@@ -57,7 +57,7 @@ const format = async (source) => {
     return new Promise((resolve, reject) => {
       let wasError = false;
 
-      clangFormat.on('error', (err) => {
+      clangFormat.on("error", (err) => {
         reject(ko(source, err));
         // `close` event is triggered after `error`. Track that we have already
         // rejected the promise so we can short circuit in the `close` handler.
