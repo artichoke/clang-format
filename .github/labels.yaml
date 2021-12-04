@@ -72,7 +72,9 @@
   description: "Target: Support for building on ARM macOS / Darwin targets."
 - name: "O-windows"
   color: "6e6ec0"
-  description: "Target: Support for building on Windows targets like `x86_64-pc-windows-msvc`."
+  description:
+    "Target: Support for building on Windows targets like
+    `x86_64-pc-windows-msvc`."
 - name: "S-archive"
   color: "d3dddd"
   description: "Status: This pull request exists to archive an unmerged branch."
