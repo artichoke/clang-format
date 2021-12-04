@@ -36,9 +36,11 @@ jobs:
         run: node ./bin/clang-format.js --check artichoke-integration-test
 
       - name: Run locally with npx
+        if: runner.os != 'Windows'
         run: npx -p . clang-format --check artichoke-integration-test
 
       - name: Run locally with npx and inferred target directory
+        if: runner.os != 'Windows'
         run: npx -p .. clang-format --check
         working-directory: "artichoke-integration-test"
 
