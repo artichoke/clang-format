@@ -1,9 +1,9 @@
 "use strict";
 
-const spawn = require("child_process").spawn;
-const fs = require("fs").promises;
-const os = require("os");
-const path = require("path");
+const { spawn } = require("node:child_process");
+const fs = require("node:fs/promises");
+const os = require("node:os");
+const path = require("node:path");
 
 const { STATUS, ok, ko } = require("./result");
 

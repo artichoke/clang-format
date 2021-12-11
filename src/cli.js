@@ -2,11 +2,14 @@
 
 /* eslint-disable no-console */
 
-const path = require("path");
+const path = require("node:path");
+
 const { program } = require("commander");
+
 const formatter = require("./index");
 const { walk } = require("./fs");
 const { STATUS, ko } = require("./result");
+
 const { version } = require("../package.json");
 
 const run = async (directory, options, _command) => {
