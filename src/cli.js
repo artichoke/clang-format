@@ -6,6 +6,7 @@ const path = require("node:path");
 
 const { program } = require("commander");
 
+const { version: clangFormatVersion } = require("./embedded-clang-format");
 const formatter = require("./index");
 const { walk } = require("./fs");
 const { STATUS, ko } = require("./result");
@@ -61,8 +62,9 @@ const run = async (directory, options, _command) => {
 
 const main = async () => {
   try {
+    const cliVersion = `artichoke/clang-format version ${version}\n${await clangFormatVersion()}`;
     program
-      .version(version)
+      .version(cliVersion)
       .description(
         `Node.js runner for LLVM clang-format
 

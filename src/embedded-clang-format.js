@@ -82,4 +82,52 @@ const format = async (source) => {
   }
 };
 
-module.exports = format;
+const version = async () => {
+  try {
+    const result = await binpath();
+    if (result.status === STATUS.failed) {
+      return Promise.reject(result);
+    }
+    const executable = result.path;
+    let version = "";
+
+    const stdio = ["ignore", "pipe", process.stderr];
+    const clangFormat = spawn(executable, ["--version"], { stdio: stdio });
+    clangFormat.stdout.on("data", (data) => {
+      version += data.toString();
+    });
+
+    return new Promise((resolve, reject) => {
+      let wasError = false;
+
+      clangFormat.on("error", (err) => {
+        reject(ko(null, err));
+        // `close` event is triggered after `error`. Track that we have already
+        // rejected the promise so we can short circuit in the `close` handler.
+        wasError = true;
+      });
+
+      clangFormat.on("close", (exitCode) => {
+        // The promise was already rejected in the `error` handler, so do
+        // nothing.
+        if (wasError) {
+          return;
+        }
+        if (exitCode) {
+          reject(ko(null, `clang-format exited with error code ${exitCode}`));
+        } else {
+          resolve(version.trim());
+        }
+      });
+    });
+  } catch (err) {
+    return Promise.reject(ko(null, err));
+  }
+};
+
+module.exports = Object.freeze(
+  Object.assign(Object.create(null), {
+    format,
+    version,
+  })
+);
