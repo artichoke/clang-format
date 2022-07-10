@@ -3,7 +3,7 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
-const format = require("./format");
+const { format } = require("./embedded-clang-format");
 const { formattableSourcesFrom } = require("./fs");
 const { ok, ko } = require("./result");
 
