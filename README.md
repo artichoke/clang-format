@@ -46,7 +46,12 @@ npx github:artichoke/clang-format --check
 The Artichoke `clang-format` runner is licensed under the [MIT License](LICENSE)
 (c) Ryan Lopopolo.
 
+This tool distributes pre-compiled `clang-format` binaries which part of the
+LLVM Project and are subject to the [Apache 2.0 License with LLVM
+exceptions][clang-format-license].
+
 [sarcasm/run-clang-format]: https://github.com/Sarcasm/run-clang-format
 [`npx`]:
   https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner
 [artichoke/artichoke]: https://github.com/artichoke/artichoke
+[clang-format-license]: https://llvm.org/LICENSE.txt
