@@ -29,6 +29,14 @@ jobs:
           ref: 98c9f2921d4220a793b6b8cbe87252505b2f2385
           path: artichoke-integration-test
 
+      - name: Setup Node.js runtime
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install npm
+        run: npm i -f npm@8.16.0
+
       - name: Install Nodejs toolchain
         run: npm ci
 
