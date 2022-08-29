@@ -35,7 +35,7 @@ jobs:
           node-version: 16
 
       - name: Install npm
-        run: npm i -f npm@8.16.0
+        run: npm i -f -g npm@8.16.0
 
       - name: Install Nodejs toolchain
         run: npm ci
