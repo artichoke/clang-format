@@ -50,7 +50,10 @@ const filesWithExtension = (files, ext) =>
 
 const formattableSourcesFrom = (files) => [
   ...filesWithExtension(files, ".c"),
+  ...filesWithExtension(files, ".cc"),
+  ...filesWithExtension(files, ".cpp"),
   ...filesWithExtension(files, ".h"),
+  ...filesWithExtension(files, ".hpp"),
 ];
 
 module.exports = Object.freeze(
