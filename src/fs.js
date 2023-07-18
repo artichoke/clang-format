@@ -18,7 +18,7 @@ const walk = async (dir) => {
   try {
     const files = await fs.readdir(dir);
     const permissible = files.filter(
-      (file) => !IGNORE_DIRECTORIES.includes(file)
+      (file) => !IGNORE_DIRECTORIES.includes(file),
     );
     const children = permissible.map(async (file) => {
       try {
@@ -62,5 +62,5 @@ module.exports = Object.freeze(
   Object.assign(Object.create(null), {
     formattableSourcesFrom,
     walk,
-  })
+  }),
 );

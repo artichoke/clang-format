@@ -15,7 +15,7 @@ const binpath = async () => {
       "..",
       "bin",
       "win32",
-      "clang-format.exe"
+      "clang-format.exe",
     );
   } else {
     executable = path.resolve(
@@ -24,7 +24,7 @@ const binpath = async () => {
       "bin",
       os.platform(),
       os.arch(),
-      "clang-format"
+      "clang-format",
     );
   }
 
@@ -129,5 +129,5 @@ module.exports = Object.freeze(
   Object.assign(Object.create(null), {
     format,
     version,
-  })
+  }),
 );

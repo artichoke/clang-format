@@ -4,7 +4,7 @@ const STATUS = Object.freeze(
   Object.assign(Object.create(null), {
     ok: "ok",
     failed: "failed",
-  })
+  }),
 );
 
 const ok = (path) =>
@@ -12,7 +12,7 @@ const ok = (path) =>
     Object.assign(Object.create(null), {
       path,
       status: STATUS.ok,
-    })
+    }),
   );
 
 const ko = (path, err = null) =>
@@ -21,7 +21,7 @@ const ko = (path, err = null) =>
       path,
       status: STATUS.failed,
       err,
-    })
+    }),
   );
 
 module.exports = Object.freeze(
@@ -29,5 +29,5 @@ module.exports = Object.freeze(
     STATUS,
     ok,
     ko,
-  })
+  }),
 );

@@ -59,7 +59,7 @@ module.exports = Object.freeze(
             });
             return Promise.all(promises);
           },
-        })
+        }),
       );
     },
     format(sourceRoot) {
@@ -75,8 +75,8 @@ module.exports = Object.freeze(
             });
             return Promise.all(promises);
           },
-        })
+        }),
       );
     },
-  })
+  }),
 );
