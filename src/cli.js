@@ -75,12 +75,12 @@ Any clang-format configuration present on the filesystem will be honored.
 
 --check mode is suitable for CI. --check does not attempt to format and instead
 exits with a non-zero status code if the source code on disk does not match the
-enforced style.`
+enforced style.`,
       )
       .option(
         "--check",
         `Run in 'check' mode. Exit with a non-zero status code if any
-formatting errors are found.`
+formatting errors are found.`,
       )
       .arguments("[directory]")
       .action(run);
