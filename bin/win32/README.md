@@ -2,9 +2,8 @@
 
 ## x64
 
-Release: [vscode-cpptools-1.10.8], clang-format 14.0.0
-
+Release: [vscode-cpptools 1.18.5], clang-format 17.0.1  
 Artifact: cpptools-win64.vsix
 
-[vscode-cpptools-1.10.8]:
-  https://github.com/microsoft/vscode-cpptools/releases/tag/v1.10.8
+[vscode-cpptools 1.18.5]:
+  https://github.com/microsoft/vscode-cpptools/releases/tag/v1.18.5
