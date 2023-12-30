@@ -2,9 +2,11 @@
 
 /* eslint-disable no-console */
 
+const fs = require("node:fs/promises");
 const path = require("node:path");
 
 const { program } = require("commander");
+const ignore = require("ignore");
 
 const { version: clangFormatVersion } = require("./embedded-clang-format");
 const formatter = require("./index");
@@ -13,50 +15,96 @@ const { STATUS, ko } = require("./result");
 
 const { version } = require("../package.json");
 
-const run = async (directory, options, _command) => {
+const getFiles = async (dir, exts) => {
+  const files = [];
+  const errors = [];
+
+  for (const candidate of await walk(dir)) {
+    if (candidate.status === STATUS.ok) {
+      const p = candidate.path;
+      const ext = path.extname(p);
+      if (exts.has(ext)) {
+        files.push(p);
+      }
+      continue;
+    }
+    if (result.path) {
+      errors.push({ type: "warn", path });
+    }
+    if (result.err) {
+      errors.push({ type: "error", error: result.error });
+    }
+  }
+  if (errors.length > 0) {
+    return Promise.reject(errors);
+  }
+  return files;
+};
+
+const getIgnore = async (ignoreFilePath) => {
   try {
-    const dir = directory || path.resolve(".");
-    let files = await walk(dir);
-    files = files.map((result) => {
-      if (result.status === STATUS.ok) {
-        return result.path;
-      }
-      if (result.path) {
-        console.warn(`KO: ${result.path}`);
-      }
-      if (result.err) {
-        console.error(result.err);
-      }
-      return null;
-    });
-    if (files.includes(null)) {
-      process.exit(1);
-    }
-    let results;
-    if (options.check) {
-      results = await formatter.check(dir).run(files);
-    } else {
-      results = await formatter.format(dir).run(files);
-    }
-    let failed = false;
-    for (const result of results) {
-      if (result.status === STATUS.ok) {
-        console.log(`OK: ${result.path}`);
-        continue;
-      }
-      if (result.path) {
-        console.warn(`KO: ${result.path}`);
-      }
-      if (result.err) {
-        console.error(result.err);
-      }
-      failed = true;
-    }
-    if (failed) {
-      process.exit(1);
-    }
+    const content = await fs.readFile(ignoreFilePath, "utf8");
+    const rules = content.split(/\r?\n/);
+    return ignore().add(rules);
+  } catch (_err) {
+    return ignore();
+  }
+};
+
+const formatSources = async (dir, sources, check) => {
+  if (check) {
+    return formatter.check(dir).run(sources);
+  } else {
+    return formatter.format(dir).run(sources);
+  }
+};
+
+const run = async (directory, options, _command) => {
+  const dir = path.resolve(directory || ".");
+  const exts = new Set(options.ext.split(","));
+  const files = [];
+
+  try {
+    const f = await getFiles(dir, exts);
+    files.push(...f);
   } catch (err) {
-    return Promise.reject(ko(null, err));
+    console.debug(err);
+    for (const result of err) {
+      if (result.type === "warn") {
+        console.warn(`KO: ${result.path}`);
+      }
+      if (result.type === "error") {
+        console.error(result.err);
+      }
+    }
+    process.exit(1);
+  }
+
+  const ig = await getIgnore(options.ignorePath);
+  const sources = files
+    .map((file) => path.relative(dir, file))
+    .filter(ig.createFilter())
+    .map((file) => path.join(dir, file));
+
+  const results = await formatSources(dir, sources, options.check);
+
+  let failed = false;
+  for (const result of results) {
+    if (result.status === STATUS.ok) {
+      console.log(`OK: ${result.path}`);
+      continue;
+    }
+    if (result.path) {
+      console.warn(`KO: ${result.path}`);
+    }
+    if (result.err) {
+      console.error(result.err);
+    }
+    failed = true;
+  }
+
+  if (failed) {
+    process.exit(1);
   }
 };
 
@@ -78,9 +126,19 @@ exits with a non-zero status code if the source code on disk does not match the
 enforced style.`,
       )
       .option(
-        "--check",
-        `Run in 'check' mode. Exit with a non-zero status code if any
-formatting errors are found.`,
+        "-c, --check",
+        `check if the given files are formatted. Exit with a non-
+zero status code if any formatting errors are found.`,
+      )
+      .option(
+        "--ext <extensions>",
+        "specify formattable file extensions",
+        ".c,.cc,.cpp,.h",
+      )
+      .option(
+        "--ignore-path <path>",
+        "specify path of ignore file",
+        ".clang-format-ignore",
       )
       .arguments("[directory]")
       .action(run);

@@ -24,10 +24,8 @@ const ko = (path, err = null) =>
     }),
   );
 
-module.exports = Object.freeze(
-  Object.assign(Object.create(null), {
-    STATUS,
-    ok,
-    ko,
-  }),
-);
+module.exports = {
+  STATUS,
+  ok,
+  ko,
+};

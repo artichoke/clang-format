@@ -1,22 +1,22 @@
 "use strict";
 
+const { Buffer } = require("node:buffer");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
 const { format } = require("./embedded-clang-format");
-const { formattableSourcesFrom } = require("./fs");
 const { ok, ko } = require("./result");
 
 const formatSource = async (source, relative) => {
   try {
     const contents = await fs.readFile(source);
     const formatted = await format(source);
-    if (formatted.toString() === contents.toString()) {
+    if (Buffer.compare(formatted, contents) === 0) {
       return Promise.resolve(ok(relative));
     }
     // Contents did not match
     // write formatted contents to disk
-    await fs.writeFile(source, formatted.toString());
+    await fs.writeFile(source, formatted);
     return Promise.resolve(ok(relative));
   } catch (err) {
     if (err.err) {
@@ -30,7 +30,7 @@ const checkSource = async (source, relative) => {
   try {
     const contents = await fs.readFile(source);
     const formatted = await format(source);
-    if (formatted.toString() === contents.toString()) {
+    if (Buffer.compare(formatted, contents) === 0) {
       return Promise.resolve(ok(relative));
     }
     // Contents did not match
@@ -44,39 +44,32 @@ const checkSource = async (source, relative) => {
   }
 };
 
-module.exports = Object.freeze(
-  Object.assign(Object.create(null), {
-    check(sourceRoot) {
-      return Object.freeze(
-        Object.assign(Object.create(null), {
-          sourceRoot,
+module.exports = {
+  check(sourceRoot) {
+    return {
+      sourceRoot,
 
-          async run(sources) {
-            const formattableSources = formattableSourcesFrom(sources);
-            const promises = formattableSources.map((source) => {
-              const relative = path.relative(this.sourceRoot, source);
-              return checkSource(source, relative);
-            });
-            return Promise.all(promises);
-          },
-        }),
-      );
-    },
-    format(sourceRoot) {
-      return Object.freeze(
-        Object.assign(Object.create(null), {
-          sourceRoot,
+      async run(sources) {
+        const promises = sources.map((source) => {
+          const relative = path.relative(this.sourceRoot, source);
+          return checkSource(source, relative);
+        });
+        return Promise.all(promises);
+      },
+    };
+  },
 
-          async run(sources) {
-            const formattableSources = formattableSourcesFrom(sources);
-            const promises = formattableSources.map((source) => {
-              const relative = path.relative(this.sourceRoot, source);
-              return formatSource(source, relative);
-            });
-            return Promise.all(promises);
-          },
-        }),
-      );
-    },
-  }),
-);
+  format(sourceRoot) {
+    return {
+      sourceRoot,
+
+      async run(sources) {
+        const promises = sources.map((source) => {
+          const relative = path.relative(this.sourceRoot, source);
+          return formatSource(source, relative);
+        });
+        return Promise.all(promises);
+      },
+    };
+  },
+};

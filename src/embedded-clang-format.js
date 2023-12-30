@@ -1,5 +1,6 @@
 "use strict";
 
+const { Buffer } = require("node:buffer");
 const { spawn } = require("node:child_process");
 const fs = require("node:fs/promises");
 const os = require("node:os");
@@ -46,12 +47,13 @@ const format = async (source) => {
       return Promise.reject(result);
     }
     const executable = result.path;
-    let formatted = "";
+
+    let formatted = Buffer.alloc(0);
 
     const stdio = ["ignore", "pipe", process.stderr];
     const clangFormat = spawn(executable, [source], { stdio: stdio });
     clangFormat.stdout.on("data", (data) => {
-      formatted += data.toString();
+      formatted = Buffer.concat([formatted, data]);
     });
 
     return new Promise((resolve, reject) => {
@@ -125,9 +127,7 @@ const version = async () => {
   }
 };
 
-module.exports = Object.freeze(
-  Object.assign(Object.create(null), {
+module.exports = {
     format,
     version,
-  }),
-);
+  };
