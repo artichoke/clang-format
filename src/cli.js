@@ -12,7 +12,7 @@ import ignore from "ignore";
 import { version as clangFormatVersion } from "./embedded-clang-format.js";
 import formatter from "./index.js";
 import { walk } from "./fs.js";
-import { STATUS, ko } from "./result.js";
+import { STATUS } from "./result.js";
 
 const VERSION = "0.16.0";
 
@@ -29,11 +29,11 @@ const getFiles = async (dir, exts) => {
       }
       continue;
     }
-    if (result.path) {
+    if (candidate.path) {
       errors.push({ type: "warn", path });
     }
-    if (result.err) {
-      errors.push({ type: "error", error: result.error });
+    if (candidate.err) {
+      errors.push({ type: "error", error: candidate.err });
     }
   }
   if (errors.length > 0) {

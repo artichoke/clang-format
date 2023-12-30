@@ -8,7 +8,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { STATUS, ok, ko } from "./result.js";
-import { dirname } from "path";
 
 const binpath = async () => {
   const dir = path.dirname(fileURLToPath(import.meta.url));
