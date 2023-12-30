@@ -2,6 +2,8 @@ import { Buffer } from "node:buffer";
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import pLimit from "p-limit";
+
 import { format } from "./embedded-clang-format.js";
 import { ok, ko } from "./result.js";
 
@@ -48,9 +50,11 @@ export default {
       sourceRoot,
 
       async run(sources) {
+        const limit = pLimit(8);
+
         const promises = sources.map((source) => {
           const relative = path.relative(this.sourceRoot, source);
-          return checkSource(source, relative);
+          return limit(() => checkSource(source, relative));
         });
         return Promise.all(promises);
       },
@@ -62,9 +66,11 @@ export default {
       sourceRoot,
 
       async run(sources) {
+        const limit = pLimit(8);
+
         const promises = sources.map((source) => {
           const relative = path.relative(this.sourceRoot, source);
-          return formatSource(source, relative);
+          return limit(() => formatSource(source, relative));
         });
         return Promise.all(promises);
       },
