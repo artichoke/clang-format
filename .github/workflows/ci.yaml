@@ -46,7 +46,7 @@ jobs:
 
       - name: Run locally with npx and inferred target directory
         if: runner.os != 'Windows'
-        run: npx -p .. clang-format --check
+        run: npx -p .. clang-format --check --ignore-path ../.clang-format-ignore
         working-directory: "artichoke-integration-test"
 
   js:
