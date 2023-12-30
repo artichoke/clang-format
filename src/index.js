@@ -1,5 +1,3 @@
-"use strict";
-
 import { Buffer } from "node:buffer";
 import fs from "node:fs/promises";
 import path from "node:path";

@@ -1,5 +1,3 @@
-"use strict";
-
 const STATUS = Object.freeze(
   Object.assign(Object.create(null), {
     ok: "ok",
