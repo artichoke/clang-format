@@ -1,11 +1,11 @@
 "use strict";
 
-const { Buffer } = require("node:buffer");
-const fs = require("node:fs/promises");
-const path = require("node:path");
+import { Buffer } from "node:buffer";
+import fs from "node:fs/promises";
+import path from "node:path";
 
-const { format } = require("./embedded-clang-format");
-const { ok, ko } = require("./result");
+import { format } from "./embedded-clang-format.js";
+import { ok, ko } from "./result.js";
 
 const formatSource = async (source, relative) => {
   try {
@@ -44,7 +44,7 @@ const checkSource = async (source, relative) => {
   }
 };
 
-module.exports = {
+export default {
   check(sourceRoot) {
     return {
       sourceRoot,

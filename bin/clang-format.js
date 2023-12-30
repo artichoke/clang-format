@@ -2,8 +2,6 @@
 
 "use strict";
 
-const main = require("../src/cli");
+import main from "../src/cli.js";
 
-(async () => {
-  await main();
-})();
+await main();

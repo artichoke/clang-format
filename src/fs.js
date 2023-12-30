@@ -1,9 +1,9 @@
 "use strict";
 
-const fs = require("node:fs/promises");
-const path = require("node:path");
+import fs from "node:fs/promises";
+import path from "node:path";
 
-const { ok, ko } = require("./result");
+import { ok, ko } from "./result.js";
 
 const walk = async (dir) => {
   try {
@@ -30,6 +30,4 @@ const walk = async (dir) => {
   }
 };
 
-module.exports = {
-  walk,
-};
+export { walk };

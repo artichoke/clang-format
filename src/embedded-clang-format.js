@@ -1,26 +1,24 @@
 "use strict";
 
-const { Buffer } = require("node:buffer");
-const { spawn } = require("node:child_process");
-const fs = require("node:fs/promises");
-const os = require("node:os");
-const path = require("node:path");
+import { Buffer } from "node:buffer";
+import { spawn } from "node:child_process";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const { STATUS, ok, ko } = require("./result");
+import { STATUS, ok, ko } from "./result.js";
+import { dirname } from "path";
 
 const binpath = async () => {
+  const dir = path.dirname(fileURLToPath(import.meta.url));
+
   let executable;
   if (os.platform() === "win32") {
-    executable = path.resolve(
-      __dirname,
-      "..",
-      "bin",
-      "win32",
-      "clang-format.exe",
-    );
+    executable = path.resolve(dir, "..", "bin", "win32", "clang-format.exe");
   } else {
     executable = path.resolve(
-      __dirname,
+      dir,
       "..",
       "bin",
       os.platform(),
@@ -127,7 +125,4 @@ const version = async () => {
   }
 };
 
-module.exports = {
-    format,
-    version,
-  };
+export { format, version };

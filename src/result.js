@@ -24,8 +24,4 @@ const ko = (path, err = null) =>
     }),
   );
 
-module.exports = {
-  STATUS,
-  ok,
-  ko,
-};
+export { STATUS, ok, ko };

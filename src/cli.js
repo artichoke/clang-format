@@ -2,18 +2,19 @@
 
 /* eslint-disable no-console */
 
-const fs = require("node:fs/promises");
-const path = require("node:path");
+import fs from "node:fs/promises";
+import path from "node:path";
 
-const { program } = require("commander");
-const ignore = require("ignore");
+import chalk from "chalk";
+import { program } from "commander";
+import ignore from "ignore";
 
-const { version: clangFormatVersion } = require("./embedded-clang-format");
-const formatter = require("./index");
-const { walk } = require("./fs");
-const { STATUS, ko } = require("./result");
+import { version as clangFormatVersion } from "./embedded-clang-format.js";
+import formatter from "./index.js";
+import { walk } from "./fs.js";
+import { STATUS, ko } from "./result.js";
 
-const { version } = require("../package.json");
+const VERSION = "0.16.0";
 
 const getFiles = async (dir, exts) => {
   const files = [];
@@ -68,10 +69,9 @@ const run = async (directory, options, _command) => {
     const f = await getFiles(dir, exts);
     files.push(...f);
   } catch (err) {
-    console.debug(err);
     for (const result of err) {
       if (result.type === "warn") {
-        console.warn(`KO: ${result.path}`);
+        console.log(chalk.red.bold("KO") + `: ${result.path}`);
       }
       if (result.type === "error") {
         console.error(result.err);
@@ -91,11 +91,11 @@ const run = async (directory, options, _command) => {
   let failed = false;
   for (const result of results) {
     if (result.status === STATUS.ok) {
-      console.log(`OK: ${result.path}`);
+      console.log(chalk.green.bold("OK") + `: ${result.path}`);
       continue;
     }
     if (result.path) {
-      console.warn(`KO: ${result.path}`);
+      console.log(chalk.red.bold("KO") + `: ${result.path}`);
     }
     if (result.err) {
       console.error(result.err);
@@ -110,7 +110,7 @@ const run = async (directory, options, _command) => {
 
 const main = async () => {
   try {
-    const cliVersion = `artichoke/clang-format version ${version}\n${await clangFormatVersion()}`;
+    const cliVersion = `artichoke/clang-format version ${VERSION}\n${await clangFormatVersion()}`;
     program
       .version(cliVersion)
       .description(
@@ -150,4 +150,4 @@ zero status code if any formatting errors are found.`,
   }
 };
 
-module.exports = main;
+export default main;
