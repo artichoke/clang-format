@@ -13,6 +13,7 @@ async function walk(dir, accumulator) {
     return ko(dir, err);
   }
 
+  const descend = [];
   for (const filename of files) {
     const p = path.join(dir, filename);
 
@@ -20,7 +21,7 @@ async function walk(dir, accumulator) {
       const stats = await fs.stat(p);
 
       if (stats.isDirectory()) {
-        await walk(p, accumulator);
+        descend.push(walk(p, accumulator));
         continue;
       }
 
@@ -34,6 +35,7 @@ async function walk(dir, accumulator) {
       accumulator.push(ko(p, err));
     }
   }
+  await Promise.allSettled(descend);
 }
 
 export async function getFiles(dir, exts) {
