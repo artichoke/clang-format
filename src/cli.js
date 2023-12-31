@@ -13,9 +13,13 @@ import { STATUS, reportError, reportOk } from "./result.js";
 
 const VERSION = "0.16.0";
 
-async function getIgnore(ignoreFilePath) {
+async function getIgnore(options) {
+  if (!options.ignore) {
+    return ignore();
+  }
+
   try {
-    const content = await fs.readFile(ignoreFilePath, "utf8");
+    const content = await fs.readFile(options.ignorePath, "utf8");
     const rules = content.split(/\r?\n/);
     return ignore().add(rules);
   } catch {
@@ -38,7 +42,7 @@ async function runCli(directory, options) {
     return 1;
   }
 
-  const ig = await getIgnore(options.ignorePath);
+  const ig = await getIgnore(options);
   const sources = files
     .filter(ig.createFilter())
     .map((file) => path.join(dir, file))
@@ -104,6 +108,7 @@ zero status code if any formatting errors are found.`,
       "specify path of ignore file",
       ".clang-format-ignore",
     )
+    .option("--no-ignore", "disable use of ignore files and patterns")
     .arguments("[directory]");
 
   program.parse();
