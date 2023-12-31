@@ -1,6 +1,7 @@
 {
   "name": "@artichokeruby/clang-format",
-  "version": "0.15.0",
+  "version": "0.16.0",
+  "type": "module",
   "private": true,
   "description": "Artichoke Ruby clang-format runner",
   "keywords": [
@@ -22,7 +23,10 @@
     "clang-format": "bin/clang-format.js"
   },
   "dependencies": {
-    "commander": "^11.1.0"
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "ignore": "^5.3.0",
+    "p-limit": "^5.0.0"
   },
   "devDependencies": {
     "eslint": "8.56.0",
@@ -37,7 +41,8 @@
       "eslint:recommended"
     ],
     "parserOptions": {
-      "ecmaVersion": 8
+      "ecmaVersion": 2022,
+      "sourceType": "module"
     },
     "rules": {
       "no-unused-vars": [

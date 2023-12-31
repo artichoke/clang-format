@@ -1,9 +1,5 @@
 #!/usr/bin/env node
 
-"use strict";
+import main from "../src/cli.js";
 
-const main = require("../src/cli");
-
-(async () => {
-  await main();
-})();
+await main();
