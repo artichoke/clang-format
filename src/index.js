@@ -5,44 +5,47 @@ import path from "node:path";
 import pLimit from "p-limit";
 
 import { format } from "./embedded-clang-format.js";
-import { ok, ko } from "./result.js";
+import { ok, ko, STATUS } from "./result.js";
 
-const formatSource = async (source, relative) => {
+async function formatSource(source, relative) {
   try {
     const contents = await fs.readFile(source);
-    const formatted = await format(source);
-    if (Buffer.compare(formatted, contents) === 0) {
-      return Promise.resolve(ok(relative));
+    const result = await format(source);
+    if (result.status === STATUS.failed) {
+      return result;
     }
-    // Contents did not match
-    // write formatted contents to disk
-    await fs.writeFile(source, formatted);
-    return Promise.resolve(ok(relative));
-  } catch (err) {
-    if (err.err) {
-      return Promise.reject(ko(relative, err.err));
-    }
-    return Promise.reject(ko(relative, err));
-  }
-};
 
-const checkSource = async (source, relative) => {
+    if (Buffer.compare(result.content, contents) === 0) {
+      return ok(relative);
+    }
+
+    // Contents did not match -- write formatted contents to disk.
+    await fs.writeFile(source, result.content);
+
+    return ok(relative);
+  } catch (err) {
+    return ko(relative, err);
+  }
+}
+
+async function checkSource(source, relative) {
   try {
     const contents = await fs.readFile(source);
-    const formatted = await format(source);
-    if (Buffer.compare(formatted, contents) === 0) {
-      return Promise.resolve(ok(relative));
+    const result = await format(source);
+    if (result.status === STATUS.failed) {
+      return result;
     }
-    // Contents did not match
-    // check mode, so fail.
-    return Promise.resolve(ko(relative));
+
+    if (Buffer.compare(result.content, contents) === 0) {
+      return ok(relative);
+    }
+
+    // Contents did not match -- check mode, so fail.
+    return ko(relative);
   } catch (err) {
-    if (err.err) {
-      return Promise.reject(ko(relative, err.err));
-    }
-    return Promise.reject(ko(relative, err));
+    return ko(relative, err);
   }
-};
+}
 
 export default {
   check(sourceRoot) {
@@ -56,7 +59,7 @@ export default {
           const relative = path.relative(this.sourceRoot, source);
           return limit(() => checkSource(source, relative));
         });
-        return Promise.all(promises);
+        return Promise.allSettled(promises);
       },
     };
   },
@@ -72,8 +75,15 @@ export default {
           const relative = path.relative(this.sourceRoot, source);
           return limit(() => formatSource(source, relative));
         });
-        return Promise.all(promises);
+        return Promise.allSettled(promises);
       },
     };
+  },
+
+  async execute(sourceRoot, sources, check) {
+    if (check) {
+      return this.check(sourceRoot).run(sources);
+    }
+    return this.format(sourceRoot).run(sources);
   },
 };

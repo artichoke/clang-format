@@ -7,7 +7,16 @@ import { fileURLToPath } from "node:url";
 
 import { STATUS, ok, ko } from "./result.js";
 
-const binpath = async () => {
+async function isExecutable(file) {
+  try {
+    await fs.access(file, fs.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function binpath() {
   const dir = path.dirname(fileURLToPath(import.meta.url));
 
   let executable;
@@ -24,29 +33,24 @@ const binpath = async () => {
     );
   }
 
-  try {
-    const err = await fs.access(executable, fs.F_OK);
-    if (err) {
-      return Promise.reject(ko(executable, err));
-    }
-    return Promise.resolve(ok(executable));
-  } catch (err) {
-    return Promise.reject(ko(executable, err));
+  if (await isExecutable(executable)) {
+    return ok(executable);
   }
-};
+  return ko(executable);
+}
 
-const format = async (source) => {
+export async function format(source) {
+  const result = await binpath();
+  if (result.status === STATUS.failed) {
+    return result;
+  }
+  const executable = result.path;
+
+  let formatted = Buffer.alloc(0);
   try {
-    const result = await binpath();
-    if (result.status === STATUS.failed) {
-      return Promise.reject(result);
-    }
-    const executable = result.path;
-
-    let formatted = Buffer.alloc(0);
-
     const stdio = ["ignore", "pipe", process.stderr];
     const clangFormat = spawn(executable, [source], { stdio: stdio });
+
     clangFormat.stdout.on("data", (data) => {
       formatted = Buffer.concat([formatted, data]);
     });
@@ -55,71 +59,81 @@ const format = async (source) => {
       let wasError = false;
 
       clangFormat.on("error", (err) => {
-        reject(ko(source, err));
+        resolve(ko(source, err));
         // `close` event is triggered after `error`. Track that we have already
-        // rejected the promise so we can short circuit in the `close` handler.
+        // resolved the promise so we can short circuit in the `close` handler.
         wasError = true;
       });
 
       clangFormat.on("close", (exitCode) => {
-        // The promise was already rejected in the `error` handler, so do
-        // nothing.
+        // The promise was already resolved with `ko` in the `error` handler, so
+        // do nothing.
         if (wasError) {
           return;
         }
+
         if (exitCode) {
-          reject(ko(source, `clang-format exited with error code ${exitCode}`));
-        } else {
-          resolve(formatted);
+          const result = ko(
+            source,
+            `clang-format exited with non-zero status code (${exitCode}) for ${source}`,
+          );
+          resolve(result);
+          return;
         }
+
+        resolve(ok(source, { content: formatted }));
       });
     });
   } catch (err) {
-    return Promise.reject(ko(null, err));
+    return ko(source, err);
   }
-};
+}
 
-const version = async () => {
+export async function clangFormatVersion() {
+  const result = await binpath();
+  if (result.status === STATUS.failed) {
+    return result;
+  }
+  const executable = result.path;
+
+  let version = Buffer.alloc(0);
   try {
-    const result = await binpath();
-    if (result.status === STATUS.failed) {
-      return Promise.reject(result);
-    }
-    const executable = result.path;
-    let version = "";
-
     const stdio = ["ignore", "pipe", process.stderr];
     const clangFormat = spawn(executable, ["--version"], { stdio: stdio });
     clangFormat.stdout.on("data", (data) => {
-      version += data.toString();
+      version = Buffer.concat([version, data]);
     });
 
     return new Promise((resolve, reject) => {
       let wasError = false;
 
       clangFormat.on("error", (err) => {
-        reject(ko(null, err));
+        resolve(ko(null, err));
         // `close` event is triggered after `error`. Track that we have already
-        // rejected the promise so we can short circuit in the `close` handler.
+        // resolved the promise so we can short circuit in the `close` handler.
         wasError = true;
       });
 
       clangFormat.on("close", (exitCode) => {
-        // The promise was already rejected in the `error` handler, so do
-        // nothing.
+        // The promise was already resolved with `ko` in the `error` handler, so
+        // do nothing.
         if (wasError) {
           return;
         }
+
         if (exitCode) {
-          reject(ko(null, `clang-format exited with error code ${exitCode}`));
-        } else {
-          resolve(version.trim());
+          const result = ko(
+            null,
+            `clang-format --version exited with non-zero status code (${exitCode})`,
+          );
+          resolve(result);
+          return;
         }
+
+        resolve(ok(null, { version: version.toString().trim() }));
       });
     });
   } catch (err) {
-    return Promise.reject(ko(null, err));
+    return ko(null, err);
   }
-};
-
-export { format, version };
+}
