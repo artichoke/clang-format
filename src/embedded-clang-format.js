@@ -55,7 +55,7 @@ export async function format(source) {
       formatted = Buffer.concat([formatted, data]);
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let wasError = false;
 
       clangFormat.on("error", (err) => {
@@ -104,7 +104,7 @@ export async function clangFormatVersion() {
       version = Buffer.concat([version, data]);
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let wasError = false;
 
       clangFormat.on("error", (err) => {
