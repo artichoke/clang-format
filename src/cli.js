@@ -11,7 +11,7 @@ import formatter from "./index.js";
 import { getFiles } from "./fs.js";
 import { STATUS, reportError, reportOk, ko } from "./result.js";
 
-const VERSION = "0.16.0";
+const VERSION = "0.17.0";
 
 async function getIgnore(options) {
   if (!options.ignore) {
