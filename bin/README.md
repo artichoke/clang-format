@@ -4,7 +4,7 @@ This directory includes pre-built binaries for `clang-format` on the following
 platforms:
 
 - Apple x86_64, arm64
-- Linux x86_64
+- Linux x86_64, arm64
 - Windows win32
 
 Embedded binaries are official or snapshot releases of the LLVM project. Each
