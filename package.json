@@ -24,13 +24,13 @@
   },
   "dependencies": {
     "chalk": "^5.4.1",
-    "commander": "^13.0.0",
-    "ignore": "^7.0.0",
+    "commander": "^13.1.0",
+    "ignore": "^7.0.3",
     "p-limit": "^6.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "9.17.0",
-    "eslint": "9.17.0",
+    "@eslint/js": "9.19.0",
+    "eslint": "9.19.0",
     "globals": "^15.14.0",
     "prettier": "3.4.2"
   },
