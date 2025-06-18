@@ -9,7 +9,7 @@ import formatter from "./index.js";
 import { getFiles } from "./fs.js";
 import { STATUS, reportError, reportOk, ko } from "./result.js";
 
-const VERSION = "0.18.0";
+const VERSION = "0.19.0";
 
 async function getIgnore(options) {
   if (!options.ignore) {
