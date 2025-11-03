@@ -21,11 +21,6 @@ If you would like to contribute code to the Artichoke `clang-format` runner
 beginning to investigate. If there is no issue, please file one before beginning
 to work on a PR. [Good first issues are labeled `E-easy`].
 
-## Discussion
-
-If you'd like to engage in a discussion outside of GitHub, you can [join
-Artichoke's public Discord server].
-
 ## Setup
 
 The Artichoke `clang-format` runner includes JavaScript and Text sources.
@@ -71,7 +66,6 @@ Regular dependency bumps are handled by [@dependabot].
   https://github.com/artichoke/clang-format/issues/new
 [good first issues are labeled `e-easy`]:
   https://github.com/artichoke/clang-format/labels/E-easy
-[join artichoke's public discord server]: https://discord.gg/QCe2tp2
 [prettier]: https://prettier.io/
 [node.js]: https://nodejs.org/en/download/package-manager
 [homebrew]: https://docs.brew.sh/Installation
